@@ -10,7 +10,7 @@ export const AppContext = createContext();
 export const AppProvider = ({ children })=>{
 
     const navigate = useNavigate()
-    const currency = import.meta.env.VITE_CURRENCY
+    const currency = '₹'
 
     const [token, setToken] = useState(null)
     const [user, setUser] = useState(null)
@@ -25,7 +25,7 @@ export const AppProvider = ({ children })=>{
     const fetchUser = async ()=>{
         try {
            const {data} = await axios.get('/api/user/data')
-           if (data.success) {
+           if (data.success && data.user) {
             setUser(data.user)
             setIsOwner(data.user.role === 'owner')
            }else{

@@ -15,7 +15,7 @@ const CarDetails = () => {
   const navigate = useNavigate()
   const [car, setCar] = useState(null)
   const [mobileNumber, setMobileNumber] = useState('')
-  const currency = import.meta.env.VITE_CURRENCY
+  const currency = '₹'
 
   const handleSubmit = async (e)=>{
     e.preventDefault();

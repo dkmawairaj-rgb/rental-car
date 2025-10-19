@@ -1,7 +1,7 @@
 import Booking from "../models/Booking.js"
 import Car from "../models/Car.js";
 import User from "../models/User.js";
-import { sendBookingNotificationToOwner, sendBookingConfirmationToUser } from "../configs/email.js";
+import { sendBookingNotificationToOwner, sendBookingConfirmationToUser, sendBookingCancellationToOwner } from "../configs/email.js";
 
 
 // Function to Check Availability of Car for a given Date
@@ -80,6 +80,7 @@ export const createBooking = async (req, res)=>{
         }
 
         // Send email notifications (async but don't wait)
+        // Only send notification to owner, not duplicate emails
         sendBookingNotificationToOwner(emailData).catch(err => console.error('Email error:', err))
         sendBookingConfirmationToUser(emailData).catch(err => console.error('Email error:', err))
 
@@ -163,6 +164,23 @@ export const cancelBooking = async (req, res)=>{
 
         booking.status = 'cancelled';
         await booking.save();
+
+        // Send cancellation notification to owner
+        const carData = await Car.findById(booking.car);
+        const userData = await User.findById(booking.user);
+        
+        const cancellationData = {
+            userName: userData.name,
+            userEmail: userData.email,
+            carName: `${carData.brand} ${carData.model}`,
+            pickupDate: new Date(booking.pickupDate).toLocaleDateString(),
+            returnDate: new Date(booking.returnDate).toLocaleDateString(),
+            price: booking.price,
+            location: carData.location
+        };
+
+        // Send cancellation notification to owner
+        sendBookingCancellationToOwner(cancellationData).catch(err => console.error('Cancellation email error:', err));
 
         res.json({ success: true, message: "Booking cancelled successfully"})
     } catch (error) {

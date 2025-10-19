@@ -153,7 +153,7 @@ Click **"Environment Variables"**:
 | Key | Value |
 |-----|-------|
 | `VITE_BASE_URL` | Your Render backend URL (from Part 3, Step 5) |
-| `VITE_CURRENCY` | `$` |
+| `VITE_CURRENCY` | `₹` |
 
 ### Step 4: Deploy!
 1. Click **"Deploy"**
