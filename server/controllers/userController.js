@@ -6,7 +6,7 @@ import Car from "../models/Car.js";
 
 // Generate JWT Token
 const generateToken = (userId)=>{
-    const payload = userId;
+    const payload = { id: userId };
     return jwt.sign(payload, process.env.JWT_SECRET)
 }
 
